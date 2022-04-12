@@ -47,3 +47,14 @@ def get_prices(driver: webdriver):
                 for row in rows:
                     _row = row.get_attribute("innerText").split("\n")
                     fuel_price_data.append(_row + [location, fuel, year])
+
+                    
+#function that analyzes and displays gas prices                    
+def wrangle_data(data: list):
+    """
+    Wrangle/Transform DAta from Price Data.
+
+    :param data: List of records
+    :return: Wrangled dataframe
+    """
+  
