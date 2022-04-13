@@ -4,6 +4,7 @@ import pandas as pd
 from selenium import webdriver
 from chromedriver_py import binary_path
 
+
 logger = logging.getLogger(__file__)
 
 PRICE_URL = 'https://calculator.aa.co.za/calculators-toolscol-1/fuel-pricing'
