@@ -2,11 +2,18 @@ import logging
 import time
 import pandas as pd
 from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait, Select
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.common.exceptions import TimeoutException
+from webdriver_manager.chrome import ChromeDriverManager
 from chromedriver_py import binary_path
+
+#Selenium server host (127.0.0.1 by default)
+#Selenium server port (4444 by default)
 
 
 logger = logging.getLogger(__file__)
-
 PRICE_URL = 'https://calculator.aa.co.za/calculators-toolscol-1/fuel-pricing'
 
 #setting parameters so Chrome and webpage detect botting
@@ -29,6 +36,7 @@ def get_prices(driver: webdriver):
     fuel_price_data = []
     driver.get(PRICE_URL)
 
+    #locating elements using its xpath
     location_elements = driver.find_elements_by_xpath("//div[@id='edit-location']/div/input")
     locations = [location.get_attribute("value") for location in location_elements]
 
@@ -38,23 +46,29 @@ def get_prices(driver: webdriver):
     year_elements = driver.find_elements_by_xpath("//select[@id='edit-year']/option")
     years = [year.get_attribute("value") for year in year_elements]
     
+
     for location in locations:
         driver.find_element_by_xpath(f"//input[@value='{location}']/following-sibling::label").click()
+
         for fuel in fuel_types:
             driver.find_element_by_xpath(f"//select[@id='edit-fuel-type']/option[@value='{fuel}']").click()
+
             for year in years:
                 driver.find_element_by_xpath(f"//select[@id='edit-year']/option[@value='{year}']").click()
                 driver.find_element_by_xpath("//input[@value='Get Fuel Price']").click()
+
                 print(f"Getting Data for {location}:{fuel}:{year}.")
                 time.sleep(3) #should always have min 3 sec sleep
                 rows = driver.find_elements_by_xpath("//tbody/tr")
+
                 for row in rows:
                     _row = row.get_attribute("innerText").split("\n")
                     fuel_price_data.append(_row + [location, fuel, year])
 
                     
 # function that analyzes and displays gas prices    
-# Data wrangling is the process of cleaning and unifying messy and complex data sets for easy access and analysis.                
+# Data wrangling is the process of cleaning and unifying messy and complex data sets for easy access and analysis.   
+             
 def wrangle_data(data: list):
     """
     Wrangle/Transform DAta from Price Data.
