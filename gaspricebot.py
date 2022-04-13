@@ -57,8 +57,9 @@ def wrangle_data(data: list):
     :param data: List of records
     :return: Wrangled dataframe
     """
-    fuel_df = pd.DataFrame(data, columns=['Price', 'Date', 'Location', 'Fuel Type', 'Year'])
     
+    fuel_df = pd.DataFrame(data, columns=['Price', 'Date', 'Location', 'Fuel Type', 'Year'])
+
     remap = {
         "Location": {
             "coast": "Coastal",
