@@ -57,7 +57,29 @@ def wrangle_data(data: list):
     :param data: List of records
     :return: Wrangled dataframe
     """
-    
     fuel_df = pd.DataFrame(data, columns=['Price', 'Date', 'Location', 'Fuel Type', 'Year'])
+    
+    remap = {
+        "Location": {
+            "coast": "Coastal",
+            "reef": "Inland"
+        },
+        "Fuel Type": {
+            "unleaded_93": "Petrol Unleaded 93",
+            "unleaded_95": "Petrol Unleaded 95",
+            "lrp": "Petrol LRP",
+            "old": "Diesel 500ppm",
+            "new": "Diesel 50ppm"
+
+        }}
+
+    fuel_df.replace(remap, inplace=True)
+    fuel_df.to_csv('fuel_prices.csv', index=False)
+
+
+if __name__ == '__main__':
+    web_driver = webdriver.Chrome()
+    get_prices(web_driver)
+    web_driver.quit()
     
     
